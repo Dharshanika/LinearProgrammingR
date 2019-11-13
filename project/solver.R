@@ -49,8 +49,25 @@ run_optimization <- function() {
     add_other_constraints(model, inputs, outputs)
     solve(model)
     efficiency <- get.objective(model)
+
     print(paste(inputs[store, 1], ": ", efficiency, sep = ""))
-  }
+
+    # TODO necessary improvements for inputs for inefficient units
+    if (efficiency < 1) {
+        # input oriented
+
+        # for each input - (1 - Theta) * input value
+        # after all check if it is equal to 1
+    }
+  }  
 
 }
+
+# TODO: raport na podstawie templatki ze strony Tomczyka
+# raport - PDF na stronie michałą tomczyka (+ może być notebook)
+# jaki problem, BCC
+# efektywności
+# które efektywne, które
+# o ile trzeba poprawić nieefektywne, aby stały się efektywne
+
 
