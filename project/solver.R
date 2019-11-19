@@ -79,10 +79,3 @@ run_optimization <- function() {
   write.csv(combined_changes, "combined_changes.csv")
   return(list(combined_efficiency, combined_changes))
 }
-
-# TODO: raport na podstawie templatki ze strony Tomczyka
-# raport - PDF na stronie michałą tomczyka (+ może być notebook)
-# jaki problem, BCC
-# efektywności
-# które efektywne, które
-# o ile trzeba poprawić nieefektywne, aby stały się efektywne
