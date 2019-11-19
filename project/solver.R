@@ -41,7 +41,8 @@ run_optimization <- function() {
   inputs_number <- ncol(inputs) - 1 # m = 5
   outputs_number <- ncol(outputs) - 1 # n = 2 
   combined_changes <- data.frame()
-
+  combined_efficiency <- data.frame()
+  
   model_size <- inputs_number + outputs_number + 1
   for(store in 1:stores_number) {
     model <- create_model(model_size)
@@ -51,6 +52,14 @@ run_optimization <- function() {
     add_other_constraints(model, inputs, outputs)
     solve(model)
     efficiency <- get.objective(model)
+
+    combined_efficiency <- combined_efficiency %>% 
+      bind_rows(
+        data.frame(
+          store = inputs[store, 1], 
+          efficiency = efficiency
+        )
+      )
 
     print(paste(inputs[store, 1], ": ", efficiency, sep = ""))
     
@@ -68,7 +77,7 @@ run_optimization <- function() {
   }  
   
   write.csv(combined_changes, "combined_changes.csv")
-  return(combined_changes)
+  return(list(combined_efficiency, combined_changes))
 }
 
 # TODO: raport na podstawie templatki ze strony Tomczyka
