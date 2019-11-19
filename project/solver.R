@@ -52,12 +52,10 @@ run_optimization <- function() {
 
     print(paste(inputs[store, 1], ": ", efficiency, sep = ""))
 
-    # TODO necessary improvements for inputs for inefficient units
     if (efficiency < 1) {
-        # input oriented
-
-        # for each input - (1 - Theta) * input value
-        # after all check if it is equal to 1
+        for (input in 1:m+1) {
+          print(paste("input", input, "of", inputs[store, 1], "should increase by:", (1-efficiency)*inputs[store, input], sep = " "))
+        }
     }
   }  
 
@@ -69,5 +67,3 @@ run_optimization <- function() {
 # efektywności
 # które efektywne, które
 # o ile trzeba poprawić nieefektywne, aby stały się efektywne
-
-
