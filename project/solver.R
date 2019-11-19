@@ -34,15 +34,17 @@ add_other_constraints <- function(model, inputs, outputs) {
 
 run_optimization <- function() {
 
-  inputs <- read.csv("inputs.csv", sep = ";", header=TRUE)
-  outputs <- read.csv("outputs.csv", sep = ";", header=TRUE)
+  inputs <- read.csv("inputs.csv", sep = ";", header = TRUE)
+  outputs <- read.csv("outputs.csv", sep = ";", header = TRUE)
 
-  k <- 19
-  m <- 5
-  n <- 2
+  stores_number <- nrow(inputs) # k = 19 
+  inputs_number <- ncol(inputs) - 1 # m = 5
+  outputs_number <- ncol(outputs) - 1 # n = 2 
+  combined_changes <- data.frame()
 
-  for(store in 1:k) {
-    model <- create_model(1+m+n)
+  model_size <- inputs_number + outputs_number + 1
+  for(store in 1:stores_number) {
+    model <- create_model(model_size)
     set_direction(model)
     set_objective(model, inputs, outputs, store)
     add_unity_constraint(model, inputs, outputs, store)
@@ -51,14 +53,22 @@ run_optimization <- function() {
     efficiency <- get.objective(model)
 
     print(paste(inputs[store, 1], ": ", efficiency, sep = ""))
-
+    
     if (efficiency < 1) {
-        for (input in 1:m+1) {
-          print(paste("input", input, "of", inputs[store, 1], "should increase by:", (1-efficiency)*inputs[store, input], sep = " "))
+        # print changes
+        for (input in (1:inputs_number) + 1) {
+          print(paste("input", input, "of", inputs[store, 1], "should increase by:", (1 - efficiency) * inputs[store, input], sep = " "))
         }
-    }
+        
+        # prepare merged data frame with necessary changes for ineffective
+        store_changes <- inputs[store, ] # get whole row for specific store
+        store_changes[-1] <- store_changes[-1] * (1 - efficiency) # multiply all columns except name by (1-efficiency)
+        combined_changes <- dplyr::bind_rows(combined_changes, store_changes)
+      }
   }  
-
+  
+  write.csv(combined_changes, "combined_changes.csv")
+  return(combined_changes)
 }
 
 # TODO: raport na podstawie templatki ze strony Tomczyka
