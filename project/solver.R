@@ -13,7 +13,7 @@ set_direction <- function(model) {
 
 set_objective <- function(model, inputs, outputs, subject_store_id) {
   # last element in vector - additional variable u_0 
-  objective_coeffs <- c(as.numeric(outputs[subject_store_id, 2:3]), 0) 
+  objective_coeffs <- c(as.numeric(outputs[subject_store_id, 2:3]), 1) 
   set.objfn(model, objective_coeffs, indices = c(6, 7, 8))
 }
 
@@ -27,7 +27,7 @@ add_other_constraints <- function(model, inputs, outputs) {
   for(i in 1:nrow(inputs)) {
     # last element in vector - additional variable u_0 
     constraint_coeffs <- c(-as.numeric(inputs[i, 2:6]),
-                           as.numeric(outputs[i, 2:3]), 0)
+                           as.numeric(outputs[i, 2:3]), 1)
     add.constraint(model, constraint_coeffs, "<=", 0)
   }
 }
